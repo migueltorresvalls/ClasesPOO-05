@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import domain.exceptions.ColorNoValido;
 import domain.exceptions.ObjetoNoValido;
+import domain.objetosJuego.Ladrillo;
 import domain.objetosJuego.Manzana;
 import domain.objetosJuego.ObjetoJuego;
 
@@ -22,19 +23,21 @@ public class IOFichero {
      *  something to do
      * }
      */
-    public static ObjetoJuego leerFichero(){
-        ArrayList<String> objetos = new ArrayList<>();
-        objetos.add("manzana");
-        objetos.add("ladrillo");
-        objetos.add("bandeja");
+    public static ArrayList<ObjetoJuego> leerFichero(){
+        ArrayList<ObjetoJuego> objetosJuego = new ArrayList<>();
 
-        HashMap<String, Color> colores = new HashMap<>();
-        colores.put("red", Color.RED);
-        colores.put("blue", Color.BLUE);
+        ArrayList<String> objetosValidos = new ArrayList<>();
+        objetosValidos.add("manzana");
+        objetosValidos.add("ladrillo");
 
-        ObjetoJuego objetoJuego = null;
+        HashMap<String, Color> coloresValidos = new HashMap<>();
+        coloresValidos.put("red", Color.RED);
+        coloresValidos.put("gray", Color.GRAY);
+        coloresValidos.put("orange", Color.ORANGE);
+        coloresValidos.put("green", Color.GREEN);
+        coloresValidos.put("blue", Color.BLUE);
+
         try {
-
             BufferedReader br = new BufferedReader(new FileReader(new File("resources/figuras.csv")));
 
             String linea = br.readLine(); 
@@ -43,39 +46,32 @@ public class IOFichero {
                 // Objeto: vida: ancho: alto
                 // String campoVida = campos[1].trim();
                 // int vida = Integer.parseInt(campoVida);
+
                 int vida = Integer.parseInt(campos[1].trim());
                 int ancho = Integer.parseInt(campos[2].trim());
                 int alto = Integer.parseInt(campos[3].trim());
+                String campoObjeto = campos[0].trim().toLowerCase();
+                String campoColor = campos[4].trim().toLowerCase();
 
                 // Objeto
-                String campoObjeto = campos[0].trim().toLowerCase();
-                if (!(objetos.contains(campoObjeto))){
+                if (!(objetosValidos.contains(campoObjeto))){
                     br.close();
                     throw new ObjetoNoValido(campoObjeto);
                 } else {
                     // Color
-                    String campoColor = campos[4].trim().toLowerCase();
-                    if (colores.keySet().contains(campoColor)){
+                    if (coloresValidos.keySet().contains(campoColor)){
                         if (campoObjeto.equals("manzana")){
-                            objetoJuego = new Manzana(vida, ancho, alto, colores.get(campoColor), 3);
+                            ObjetoJuego manzana = new Manzana(vida, ancho, alto, coloresValidos.get(campoColor), 3);
+                            objetosJuego.add(manzana);
+                        } else if (campoObjeto.equals("ladrillo")){
+                            int tercio = Integer.parseInt(campos[5].trim());
+                            ObjetoJuego ladrillo = new Ladrillo(vida, ancho, alto, coloresValidos.get(campoColor), tercio);
+                            objetosJuego.add(ladrillo);
                         }
-                        /*
-                         * else if (campoObjeto.equals("manzana")){
-                            objetoJuego = new Ladrillo(vida, ancho, alto, colores.get(campoColor), 3);
-                         }
-                         */
                     } else {
                         br.close();
                         throw new ColorNoValido(campoColor);
                     }
-                    /*
-                    if (campoColor.equals("blue")){
-                        objetoJuego = new ObjetoJuego(vida, ancho, alto, Color.BLUE);
-                    } else {
-                        br.close();
-                        throw new ColorNoValido(campoColor);
-                    }
-                     */
                 }
 
                 linea = br.readLine();
@@ -84,6 +80,6 @@ public class IOFichero {
         }catch(IOException e){
             e.printStackTrace();
         }
-        return objetoJuego;
+        return objetosJuego;
     }  
 }

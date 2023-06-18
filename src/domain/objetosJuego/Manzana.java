@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
 
+import ui.Juego;
+
 public class Manzana extends ObjetoJuego{
 
     private HashMap<String, Boolean> direccion = new HashMap<>(); // Derecha, true. Izquireda, false. etc
 
     public Manzana(int vida, int ancho, int alto, Color color, int velocidad){
-        super(vida, ancho, alto, color, velocidad);
+        super(50, Juego.ALTO-100, vida, ancho, alto, color, velocidad);
     }
 
     public void setDireccion(HashMap<String, Boolean> direccion){
@@ -32,6 +34,14 @@ public class Manzana extends ObjetoJuego{
                 }
             }
         });
+    }
+
+    public void restarVida(int deltaVida){
+        vida -= deltaVida;
+    }
+
+    public boolean isVivo(){
+        return vida>0;
     }
 
     @Override

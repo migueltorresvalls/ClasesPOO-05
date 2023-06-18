@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import domain.objetosJuego.Ladrillo;
 import domain.objetosJuego.Manzana;
 import domain.objetosJuego.ObjetoJuego;
 import io.IOFichero;
@@ -14,13 +15,21 @@ import ui.Tablero;
 
 public class GestionJuego {
 
+    private Manzana manzana;
+
     private HashMap<String, Boolean> teclasPulsadas = new HashMap<>();
     private ArrayList<ObjetoJuego> objetos = new ArrayList<>();
 
     private Juego juego; 
 
     public GestionJuego(Juego juego){
-        objetos.add(IOFichero.leerFichero());
+        objetos = IOFichero.leerFichero();
+        // Sacamos objeto manzana para colision
+        objetos.forEach(o -> {
+            if (o instanceof Manzana mz){
+                manzana = mz;
+            }
+        });
         this.juego = juego; 
     }
 
@@ -65,11 +74,22 @@ public class GestionJuego {
 
     public void recalcularPosicion(){
         objetos.forEach(obj -> {
+            // Muevo todos los objetos
+            obj.mover();
             if (obj instanceof Manzana manzana){
+                // Compruebo teclas pulsadas 
                 manzana.setDireccion(teclasPulsadas);
-                manzana.mover();
+            } else if (obj instanceof Ladrillo ladrillo){
+                // Compruebo colision con manzana
+                if (ladrillo.detectarColision(manzana)){
+                    manzana.restarVida(Ladrillo.VIDA_LADRILLO);
+                }
             }
         });
+    }
+
+    public Manzana getManzana(){
+        return manzana; 
     }
 
     public void initJuego(){

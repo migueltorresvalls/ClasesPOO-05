@@ -2,30 +2,33 @@ package domain.objetosJuego;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import ui.Juego;
 
 public abstract class ObjetoJuego {
 
-    protected int x = 50; 
-    protected int y = Juego.ALTO-100;
+    protected int x;
+    protected int y;
     protected int vida; 
     protected int ancho; 
     protected int alto; 
     protected int velocidad; 
 
-    protected Color color; 
+    protected Color color;
 
-    public ObjetoJuego(){
-
-    }
-
-    public ObjetoJuego(int vida, int ancho, int alto, Color color, int velocidad){
+    public ObjetoJuego(int x, int y, int vida, int ancho, int alto, Color color, int velocidad){
+        this.x = x; 
+        this.y = y;
         this.vida = vida; 
         this.ancho = ancho; 
         this.alto = alto; 
         this.color = color; 
         this.velocidad = velocidad; 
+    }
+
+    public int getVida(){
+        return vida; 
     }
 
     public void setX(int x){
@@ -42,6 +45,10 @@ public abstract class ObjetoJuego {
     
     public abstract void mover();
     public abstract void pintar(Graphics g);
+
+    public Rectangle getRectanguloInterseccion(){
+        return new Rectangle(x, y, ancho, alto);
+    }
 
     @Override
     public String toString(){

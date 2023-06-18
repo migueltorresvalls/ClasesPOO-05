@@ -1,2 +1,5 @@
-manzana:100:30:30:blue
-ladrillo:200:20:10:red
+manzana:1000:30:30:green
+ladrillo:5:120:30:gray:1
+ladrillo:5:120:30:gray:2
+ladrillo:5:120:30:gray:3
+ladrillo:5:120:30:gray:4

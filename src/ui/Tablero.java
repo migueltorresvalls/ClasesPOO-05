@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -20,7 +21,7 @@ public class Tablero extends JPanel {
         setBackground(Color.BLACK);
 
         new Thread(() -> {
-            while (true){
+            while (gestion.getManzana().isVivo()){
                 gestion.recalcularPosicion();
                 repaint(); // SIEMPRE
                 try {
@@ -41,6 +42,10 @@ public class Tablero extends JPanel {
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.PLAIN, 15));
+        g.drawString("Vida: " + gestion.getManzana().getVida(), 50, 50);
 
         gestion.getObjetos().forEach(obj -> obj.pintar(g));
     }
